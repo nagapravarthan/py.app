@@ -1,0 +1,66 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Set up the game window
+width, height = 500, 500
+window = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Aviator Game")
+
+# Set up colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Set up the player
+player_size = 50
+player_pos = [width / 2, height - 2 * player_size]
+
+# Set up the enemy
+enemy_size = 50
+enemy_pos = [random.randint(0, width - enemy_size), 0]
+enemy_speed = 10
+
+# Set up game over flag
+game_over = False
+
+# Set up game clock
+clock = pygame.time.Clock()
+
+# Game loop
+while not game_over:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_pos[0] -= player_size
+            elif event.key == pygame.K_RIGHT:
+                player_pos[0] += player_size
+
+    # Update the player position
+    player_rect = pygame.Rect(player_pos[0], player_pos[1], player_size, player_size)
+
+    # Update the enemy position
+    enemy_rect = pygame.Rect(enemy_pos[0], enemy_pos[1], enemy_size, enemy_size)
+    enemy_pos[1] += enemy_speed
+
+    # Check for collision
+    if player_rect.colliderect(enemy_rect):
+        game_over = True
+
+    # Draw the game window
+    window.fill(WHITE)
+    pygame.draw.rect(window, RED, (player_pos[0], player_pos[1], player_size, player_size))
+    pygame.draw.rect(window, RED, (enemy_pos[0], enemy_pos[1], enemy_size, enemy_size))
+    pygame.display.update()
+
+    # Set the frames per second
+    clock.tick(30)
+
+# Quit the game
+pygame.quit()
+quit()
